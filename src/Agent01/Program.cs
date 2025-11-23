@@ -29,7 +29,7 @@ Console.WriteLine("Initializing agent...");
 
 try
 {
-    // Create Azure AI Projects client using environment variable-based connection string
+    // The agent uses configuration from appsettings.json and Development config
     // Note: This is for demonstration purposes. In production, consider using Azure Identity
     // or Azure Key Vault for more secure credential management
     var endpoint = new Uri(projectEndpoint);
