@@ -29,25 +29,23 @@ Console.WriteLine("Initializing agent...");
 
 try
 {
-    // Set environment variables for the Azure AI Projects SDK
-    Environment.SetEnvironmentVariable("PROJECT_CONNECTION_STRING", $"{projectEndpoint}?api-version=2024-07-01-preview&key={apiKey}");
-    
     // Create Azure AI Projects client using environment variable-based connection string
-    var connectionString = Environment.GetEnvironmentVariable("PROJECT_CONNECTION_STRING");
-    
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        Console.WriteLine("Error: Could not set PROJECT_CONNECTION_STRING environment variable.");
-        return;
-    }
-    
-    // For now, we'll create a basic client structure
-    // The actual implementation will depend on the specific Azure AI Projects SDK requirements
+    // Note: This is for demonstration purposes. In production, consider using Azure Identity
+    // or Azure Key Vault for more secure credential management
     var endpoint = new Uri(projectEndpoint);
     
     Console.WriteLine("Agent configuration loaded successfully:");
     Console.WriteLine($"  Endpoint: {endpoint}");
-    Console.WriteLine($"  API Key: {new string('*', apiKey.Length - 4)}{apiKey.Substring(apiKey.Length - 4)}");
+    
+    // Mask the API key for security (only show that it's configured)
+    if (!string.IsNullOrEmpty(apiKey))
+    {
+        Console.WriteLine($"  API Key: [CONFIGURED - {apiKey.Length} characters]");
+    }
+    else
+    {
+        Console.WriteLine("  API Key: [NOT CONFIGURED]");
+    }
     
     // Note: The Azure.AI.Projects SDK client initialization would typically go here
     // This is a placeholder showing the configuration is properly loaded
