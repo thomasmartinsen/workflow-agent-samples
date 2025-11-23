@@ -13,7 +13,7 @@ var configuration = new ConfigurationBuilder()
 
 var projectEndpoint = configuration["AzureAI:ProjectEndpoint"];
 var apiKey = configuration["AzureAI:ApiKey"];
-var agentName = configuration["AzureAI:AgentName"];
+var agentName = "translate-english";
 
 if (string.IsNullOrEmpty(projectEndpoint) || string.IsNullOrEmpty(apiKey))
 {
