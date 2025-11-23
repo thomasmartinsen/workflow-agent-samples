@@ -398,6 +398,9 @@ FodyWeavers.xsd
 *.sln.iml
 /src/Orchestration/AppHost/appsettings.Development.json
 
+# Development configuration files
+appsettings.Development.json
+
 !src/Clients/Clients.InRiver/Client/Api/V100/Packages/*
 
 # Exported CV markdown files

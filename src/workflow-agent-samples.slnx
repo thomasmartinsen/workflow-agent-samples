@@ -1,1 +1,3 @@
-<Solution />
+<Solution>
+  <Project Path="Agent01/Agent01.csproj" />
+</Solution>
