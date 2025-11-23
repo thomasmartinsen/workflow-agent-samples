@@ -1,11 +1,9 @@
-﻿using Azure;
-using Azure.AI.Projects;
-using Azure.Core;
+﻿using Azure.AI.Projects;
+using Azure.AI.Projects.OpenAI;
 using Azure.Identity;
 using Microsoft.Extensions.Configuration;
-using System.ClientModel;
+using OpenAI.Responses;
 
-// Load configuration
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -13,9 +11,9 @@ var configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
-// Get configuration values
 var projectEndpoint = configuration["AzureAI:ProjectEndpoint"];
 var apiKey = configuration["AzureAI:ApiKey"];
+var agentName = configuration["AzureAI:AgentName"];
 
 if (string.IsNullOrEmpty(projectEndpoint) || string.IsNullOrEmpty(apiKey))
 {
@@ -23,47 +21,27 @@ if (string.IsNullOrEmpty(projectEndpoint) || string.IsNullOrEmpty(apiKey))
     return;
 }
 
-Console.WriteLine("Agent01 - Microsoft Foundry Agent");
-Console.WriteLine($"Project Endpoint: {projectEndpoint}");
-Console.WriteLine("Initializing agent...");
+Console.WriteLine($"Initializing agent {agentName}...");
 
 try
 {
-    // The agent uses configuration from appsettings.json and Development config
-    // Note: This is for demonstration purposes. In production, consider using Azure Identity
-    // or Azure Key Vault for more secure credential management
     var endpoint = new Uri(projectEndpoint);
-    
-    Console.WriteLine("Agent configuration loaded successfully:");
-    Console.WriteLine($"  Endpoint: {endpoint}");
-    
-    // Mask the API key for security (only show that it's configured)
-    if (!string.IsNullOrEmpty(apiKey))
-    {
-        Console.WriteLine($"  API Key: [CONFIGURED - {apiKey.Length} characters]");
-    }
-    else
-    {
-        Console.WriteLine("  API Key: [NOT CONFIGURED]");
-    }
-    
-    // Note: The Azure.AI.Projects SDK client initialization would typically go here
-    // This is a placeholder showing the configuration is properly loaded
-    
-    var agentName = "Agent01";
-    Console.WriteLine($"\nAgent: {agentName}");
-    Console.WriteLine("Agent is configured and ready.");
-    
-    // The actual agent creation and orchestration using Microsoft Agent Framework
-    // and Microsoft Foundry would be implemented here based on the specific
-    // requirements and API endpoints available in the Azure AI Projects SDK
+    AIProjectClient projectClient = new(endpoint: new Uri(projectEndpoint), tokenProvider: new DefaultAzureCredential());
+    AgentRecord agentRecord = projectClient.Agents.GetAgent(agentName);
+    Console.WriteLine($"Agent retrieved (name: {agentRecord.Name}, id: {agentRecord.Id})");
 
-    Console.WriteLine("\nAgent initialization complete.");
-    Console.WriteLine("To implement full agent functionality, additional agent logic");
-    Console.WriteLine("would be added here based on your specific use case.");
+    Console.WriteLine("\nType a message to send to the agent (or press Enter to exit):");
+    var input = Console.ReadLine();
+
+    OpenAIResponseClient responseClient = projectClient.OpenAI.GetProjectResponsesClientForAgent(agentRecord);
+    OpenAIResponse response = responseClient.CreateResponse(input);
+    Console.WriteLine(response.GetOutputText());
 }
 catch (Exception ex)
 {
     Console.WriteLine($"Error initializing agent: {ex.Message}");
     Console.WriteLine($"Stack trace: {ex.StackTrace}");
 }
+
+Console.WriteLine("Press Enter to exit.");
+Console.ReadLine();

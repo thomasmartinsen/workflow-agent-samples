@@ -1,6 +1,0 @@
-{
-  "AzureAI": {
-    "ProjectEndpoint": "https://impnd01.services.ai.azure.com/api/projects/project01",
-    "ApiKey": "your-api-key-here"
-  }
-}
