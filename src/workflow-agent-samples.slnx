@@ -3,4 +3,5 @@
     <File Path=".editorconfig" />
   </Folder>
   <Project Path="Agent01/Agent01.csproj" />
+  <Project Path="Workflow01/Workflow01.csproj" />
 </Solution>
